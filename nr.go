@@ -5,10 +5,11 @@ import (
     "fmt"
     "math/rand"
     "net"
-    "strconv"
     "runtime"
     "time"
 )
+
+const PORT = "554"
 
 func random_ip() string {
     for {
@@ -30,15 +31,16 @@ func random_ip() string {
             ip := make(net.IP, 4)
             binary.BigEndian.PutUint32(ip, intip)
             return ip.String()
-
         }
     }
 }
 
 func check(ip string, port string) {
-    d := net.Dialer{Timeout: time.Second}
     addr := ip + ":" + port
+
+    d := net.Dialer{Timeout: time.Second}
     c, e := d.Dial("tcp", addr)
+
     if e == nil {
         c.Close()
         fmt.Println(addr)
@@ -47,8 +49,7 @@ func check(ip string, port string) {
 
 func worker() {
     for {
-        ip := random_ip()
-        go check(ip, strconv.Itoa(80))
+        go check(random_ip(), PORT)
     }
 }
 
